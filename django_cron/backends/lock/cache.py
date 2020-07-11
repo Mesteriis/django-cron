@@ -34,7 +34,7 @@ class CacheLock(DjangoCronJobLock):
 
     def lock_failed_message(self):
         started = self.get_running_lock_date()
-        msgs = [
+        return [
             "%s: lock has been found. Other cron started at %s" % (
                 self.job_name, started
             ),
@@ -42,7 +42,6 @@ class CacheLock(DjangoCronJobLock):
                 self.job_name, self.timeout, self.lock_name
             )
         ]
-        return msgs
 
     def get_cache_by_name(self):
         """
