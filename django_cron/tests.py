@@ -160,7 +160,7 @@ class TestCase(TransactionTestCase):
         CronJobLog.objects.all().delete()
         logs_count = CronJobLog.objects.all().count()
 
-        for i in range(10):
+        for _ in range(10):
             call_command('runcrons', self.error_cron, force=True)
         call_command('runcrons', self.test_failed_runs_notification_cron)
 

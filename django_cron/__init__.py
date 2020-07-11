@@ -107,12 +107,14 @@ class CronJobManager(object):
                 last_job = CronJobLog.objects.filter(code=cron_job.code).latest('start_time')
             except CronJobLog.DoesNotExist:
                 pass
-            if last_job:
-                if not last_job.is_success and cron_job.schedule.retry_after_failure_mins:
-                    if get_current_time() > last_job.start_time + timedelta(minutes=cron_job.schedule.retry_after_failure_mins):
-                        return True
-                    else:
-                        return False
+            if (
+                last_job
+                and not last_job.is_success
+                and cron_job.schedule.retry_after_failure_mins
+            ):
+                return get_current_time() > last_job.start_time + timedelta(
+                    minutes=cron_job.schedule.retry_after_failure_mins
+                )
 
             try:
                 self.previously_ran_successful_cron = CronJobLog.objects.filter(
